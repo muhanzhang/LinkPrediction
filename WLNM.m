@@ -42,6 +42,9 @@ function [auc] = WLNM(train, test, K, ith_experiment)
     addpath('software/liblinear-2.1/matlab');  % need to install liblinear
     train_data = sparse(train_data);
     test_data = sparse(test_data);
+    if exist('tempdata') ~= 7
+        !mkdir tempdata
+    end
     libsvmwrite(sprintf('tempdata/traindata_%d', ith_experiment), train_label, train_data);
     libsvmwrite(sprintf('tempdata/testdata_%d', ith_experiment), test_label, test_data);  % prepare data
     cmd = sprintf('th nDNN.lua -inputdim %d -ith_experiment %d', K * (K - 1) / 2, ith_experiment);
