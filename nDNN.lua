@@ -28,9 +28,9 @@ ith_experiment = params.ith_experiment
 
 
 -- assume that you have 3 GPUs, adjust it according to your Config.
-if ith_experiment % 3 == 1 then
+if ith_experiment % 3 == 0 then
    cutorch.setDevice(1)
-elseif ith_experiment % 3 == 2 then
+elseif ith_experiment % 3 == 1 then
    cutorch.setDevice(2)
 else
    cutorch.setDevice(3)
