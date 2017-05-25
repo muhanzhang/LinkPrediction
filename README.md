@@ -21,7 +21,7 @@ You need to install liblinear for saving .mat data to libsvm format so that Torc
 
 This will install liblinear. Then, in MATLAB, cd to the "software/liblinear-2.1/matlab/", type "make" to install the MATLAB interface. Please also change the name of "train.mexa64" and "predict.mexa64" to "liblinear_train.mexa64" and "liblinear_predict.mexa64" if you want to train a logistic regression model instead of neural network.
 
-Use the following command to run matlab in your linux server. This will replace the system's default libstdc++.so.6 with that of MATLAB's (for successfully loading cunn of Torch)
+Use the following command to run MATLAB in your linux server. This will replace the system's default libstdc++.so.6 with that of MATLAB's (for successfully loading cunn of Torch)
 
     LD_PRELOAD="/usr/lib64/libstdc++.so.6" matlab 
 
@@ -30,6 +30,8 @@ Then, in MATLAB, type
     Main
 
 to run the experiments. By default, you will run WLNM on the smallest network, USAir, for 1 time. Modify: numberOfExperiment, dataname, and method in Main.m, in order to run repeated experiments on all datasets to compare all link prediction methods.
+
+You may also modify WLNM.m in order to only store the training and testing data without running Torch, and use your own neural network programs to train and test on them.
 
 To calculate AUC score inside lua, you need to download the metrics package (optional)
 
