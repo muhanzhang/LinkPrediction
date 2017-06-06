@@ -27,14 +27,8 @@ params = cmd:parse(arg)
 ith_experiment = params.ith_experiment
 
 
--- assume that you have 3 GPUs, adjust it according to your Config.
-if ith_experiment % 3 == 0 then
-   cutorch.setDevice(1)
-elseif ith_experiment % 3 == 1 then
-   cutorch.setDevice(2)
-else
-   cutorch.setDevice(3)
-end
+num_gpus = cutorch.getDeviceCount()
+cutorch.setDevice(ith_experiment % num_gpus + 1)
 
 -- network configuration
 l1 = params.inputdim
@@ -53,11 +47,11 @@ net:add(nn.Linear(l2, l3))
 --net:add(nn.BatchNormalization(l3))
 net:add(nn.ReLU())
 --net:add(nn.Dropout(0.5))
-net:add(nn.Linear(l3, 2))
+net:add(nn.Linear(l3, l4))
 --net:add(nn.BatchNormalization(l4))
---net:add(nn.ReLU())
+net:add(nn.ReLU())
 --net:add(nn.Dropout(0.5))
---net:add(nn.Linear(l4, 2))
+net:add(nn.Linear(l4, 2))
 --net:add(nn.Sigmoid())
 net:add(nn.LogSoftMax())
 
