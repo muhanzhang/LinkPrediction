@@ -54,5 +54,5 @@ Then install nauty by:
 
 There are two MATLAB wrappers canon.m, canonical.c in the main folder. If there is no canonical.mex*64 file in the main folder, the program canon.m will compile canonical.c for the first time. 
 
-Please contact Muhan Zhang, muhan@wustl.edu if you encounter any bugs.
+Muhan Zhang, muhan@wustl.edu
 2017.2.15
