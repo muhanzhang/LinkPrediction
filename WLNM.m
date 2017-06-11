@@ -26,33 +26,47 @@ function [auc] = WLNM(train, test, K, ith_experiment)
     [test_data, test_label] = graph2vector(test_pos, test_neg, train, K);
     
     % train a model
-    model = 2;
+    model = 3;
     switch model
     case 1  % logistic regression
-    addpath('software/liblinear-2.1/matlab');  % need to install liblinear
-    train_data = sparse(train_data);
-    test_data = sparse(test_data);
-    [~, optim_c] = evalc('liblinear_train(train_label, train_data, ''-s 0 -C -q'');');
-    model = liblinear_train(train_label, train_data, sprintf('-s 0 -c %d -q', optim_c(1)));
-    [~, acc, scores] = liblinear_predict(test_label, test_data, model, '-b 1 -q');
-    acc
-    l1 = find(model.Label == 1);
-    scores = scores(:, l1);
-    case 2 % feed forward neural networks
-    addpath('software/liblinear-2.1/matlab');  % need to install liblinear
-    train_data = sparse(train_data);
-    test_data = sparse(test_data);
-    if exist('tempdata') ~= 7
-        !mkdir tempdata
-    end
-    libsvmwrite(sprintf('tempdata/traindata_%d', ith_experiment), train_label, train_data);
-    libsvmwrite(sprintf('tempdata/testdata_%d', ith_experiment), test_label, test_data);  % prepare data
-    cmd = sprintf('th nDNN.lua -inputdim %d -ith_experiment %d', K * (K - 1) / 2, ith_experiment);
-    system(cmd, '-echo'); 
-    scores = load(sprintf('tempdata/test_log_scores_%d.asc', ith_experiment));
-    delete(sprintf('tempdata/traindata_%d', ith_experiment));  % to delete temporal train and test data
-    delete(sprintf('tempdata/testdata_%d', ith_experiment));
-    delete(sprintf('tempdata/test_log_scores_%d.asc', ith_experiment));
+        addpath('software/liblinear-2.1/matlab');  % need to install liblinear
+        train_data = sparse(train_data);
+        test_data = sparse(test_data);
+        [~, optim_c] = evalc('liblinear_train(train_label, train_data, ''-s 0 -C -q'');');
+        model = liblinear_train(train_label, train_data, sprintf('-s 0 -c %d -q', optim_c(1)));
+        [~, acc, scores] = liblinear_predict(test_label, test_data, model, '-b 1 -q');
+        acc
+        l1 = find(model.Label == 1);
+        scores = scores(:, l1);
+    case 2 % train a feedforward neural network in Torch
+        addpath('software/liblinear-2.1/matlab');  % need to install liblinear
+        train_data = sparse(train_data);
+        test_data = sparse(test_data);
+        if exist('tempdata') ~= 7
+            !mkdir tempdata
+        end
+        libsvmwrite(sprintf('tempdata/traindata_%d', ith_experiment), train_label, train_data);
+        libsvmwrite(sprintf('tempdata/testdata_%d', ith_experiment), test_label, test_data);  % prepare data
+        cmd = sprintf('th nDNN.lua -inputdim %d -ith_experiment %d', K * (K - 1) / 2, ith_experiment);
+        system(cmd, '-echo'); 
+        scores = load(sprintf('tempdata/test_log_scores_%d.asc', ith_experiment));
+        delete(sprintf('tempdata/traindata_%d', ith_experiment));  % to delete temporal train and test data
+        delete(sprintf('tempdata/testdata_%d', ith_experiment));
+        delete(sprintf('tempdata/test_log_scores_%d.asc', ith_experiment));
+    case 3 % train a feedforward neural network in MATLAB
+        layers = [imageInputLayer([K*(K-1)/2 1], 'Normalization','none')
+        fullyConnectedLayer(32)
+        reluLayer
+        fullyConnectedLayer(32)
+        reluLayer
+        fullyConnectedLayer(16)
+        reluLayer
+        fullyConnectedLayer(2)
+        softmaxLayer
+        classificationLayer];
+        opts = trainingOptions('sgdm', 'InitialLearnRate', 0.001, 'MaxEpochs', 100, 'MiniBatchSize', 128, 'LearnRateSchedule','piecewise', 'LearnRateDropFactor', 0.5, 'L2Regularization', 0.001);
+        net = trainNetwork(train_data, train_label, layers, opts);
+        [~, scores] = classify(net,test_data);
     end
 
     % calculate the AUC
