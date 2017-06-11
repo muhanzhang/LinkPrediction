@@ -64,9 +64,12 @@ function [auc] = WLNM(train, test, K, ith_experiment)
         fullyConnectedLayer(2)
         softmaxLayer
         classificationLayer];
-        opts = trainingOptions('sgdm', 'InitialLearnRate', 0.001, 'MaxEpochs', 100, 'MiniBatchSize', 128, 'LearnRateSchedule','piecewise', 'LearnRateDropFactor', 0.5, 'L2Regularization', 0.001);
-        net = trainNetwork(train_data, train_label, layers, opts);
-        [~, scores] = classify(net,test_data);
+        opts = trainingOptions('sgdm', 'InitialLearnRate', 0.001, 'MaxEpochs', 100, 'MiniBatchSize', 128,...
+            'LearnRateSchedule','piecewise', 'LearnRateDropFactor', 0.5, 'L2Regularization', 0.001,...
+            'ExecutionEnvironment', 'cpu');
+        net = trainNetwork(reshape(train_data', K*(K-1)/2, 1, 1, size(train_data, 1)), categorical(train_label), layers, opts);
+        [~, scores] = classify(net, reshape(test_data', K*(K-1)/2, 1, 1, size(test_data, 1)));
+        scores(:, 1) = [];
     end
 
     % calculate the AUC
