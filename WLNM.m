@@ -26,7 +26,7 @@ function [auc] = WLNM(train, test, K, ith_experiment)
     [test_data, test_label] = graph2vector(test_pos, test_neg, train, K);
     
     % train a model
-    model = 3;
+    model = 2;
     switch model
     case 1  % logistic regression
         addpath('software/liblinear-2.1/matlab');  % need to install liblinear
@@ -54,7 +54,7 @@ function [auc] = WLNM(train, test, K, ith_experiment)
         delete(sprintf('tempdata/testdata_%d', ith_experiment));
         delete(sprintf('tempdata/test_log_scores_%d.asc', ith_experiment));
     case 3 % train a feedforward neural network in MATLAB
-        layers = [imageInputLayer([K*(K-1)/2 1], 'Normalization','none')
+        layers = [imageInputLayer([K*(K-1)/2 1 1], 'Normalization','none')
         fullyConnectedLayer(32)
         reluLayer
         fullyConnectedLayer(32)
@@ -64,8 +64,8 @@ function [auc] = WLNM(train, test, K, ith_experiment)
         fullyConnectedLayer(2)
         softmaxLayer
         classificationLayer];
-        opts = trainingOptions('sgdm', 'InitialLearnRate', 0.001, 'MaxEpochs', 100, 'MiniBatchSize', 128,...
-            'LearnRateSchedule','piecewise', 'LearnRateDropFactor', 0.5, 'L2Regularization', 0.001,...
+        opts = trainingOptions('sgdm', 'InitialLearnRate', 0.1, 'MaxEpochs', 200, 'MiniBatchSize', 128, ...
+            'LearnRateSchedule','piecewise', 'LearnRateDropFactor', 0.9, 'L2Regularization', 0, ...
             'ExecutionEnvironment', 'cpu');
         net = trainNetwork(reshape(train_data', K*(K-1)/2, 1, 1, size(train_data, 1)), categorical(train_label), layers, opts);
         [~, scores] = classify(net, reshape(test_data', K*(K-1)/2, 1, 1, size(test_data, 1)));

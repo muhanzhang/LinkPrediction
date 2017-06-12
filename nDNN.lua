@@ -8,7 +8,6 @@ require 'cunn'
 require 'cutorch'
 require 'optim'
 require 'svm'
-require 'nnsparse'
 
 
 cmd = torch.CmdLine()
@@ -17,7 +16,7 @@ cmd:text()
 cmd:text('Train a neural network for link prediction.')
 cmd:text()
 cmd:text('Options')
-cmd:option('-inputdim', 190, 'first layer input dimension')
+cmd:option('-inputdim', 190, 'first layer input dimension, should be equal to K(K-1)/2')
 cmd:option('-ith_experiment', 1, 'the ID of the current experiment')
 cmd:text()
 
@@ -37,8 +36,6 @@ l3 = 32
 l4 = 16
 
 net = nn.Sequential()
---net:add(nnsparse.SparseLinearBatch(l1, l2))
---net:add(nnsparse.Densify(l2))
 net:add(nn.Linear(l1, l2))
 --net:add(nn.BatchNormalization(l2))
 net:add(nn.ReLU())
@@ -52,7 +49,6 @@ net:add(nn.Linear(l3, l4))
 net:add(nn.ReLU())
 --net:add(nn.Dropout(0.5))
 net:add(nn.Linear(l4, 2))
---net:add(nn.Sigmoid())
 net:add(nn.LogSoftMax())
 
 
@@ -347,6 +343,8 @@ net =  torch.load(filename)
 testAcc, testErr = test(testset, true)
 
 -- save weights for visualization
+runthis = false
+if runthis then
 local weights, gradients = net:parameters()
 weights_file = torch.DiskFile(paths.concat(opt.save, string.format('l1_weights.asc')), 'w')
 weights_file:noAutoSpacing()
@@ -357,6 +355,6 @@ for i = 1, weights[1]:size(1) do
    end
    weights_file:writeChar(10)
 end
-
+end
 
 

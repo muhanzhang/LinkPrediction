@@ -28,9 +28,9 @@ num_edges = nnz(subgraph1);
 degrees = sum(subgraph1, 2);
 
 % Check if canonical.c has been compiled to mex function
-flag = exist('canonical');
+flag = exist(['canonical.' mexext]);
 %flag = 0;  % let it be compiled every time
-if flag ~= 3
+if flag == 0
     !rm canonical.mex*;
     cd software/nauty26r7;
     !cp ../../canonical.c .;

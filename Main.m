@@ -11,7 +11,7 @@ numOfExperiment = 1;
 datapath = 'data/';
 
 %dataname = strvcat('USAir','NS','PB','Yeast','Celegans','Power','Router','Ecoli');
-dataname = strvcat('nettest');
+%dataname = strvcat('USAir');
 
 tic;
 %method = [1, 2, 3, 4, 5, 6];  % 1: WLNM,  2: common-neighbor-based,  3: path-based, 4: random walk  5: latent-feature-based,  6: stochastic block model
