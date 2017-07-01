@@ -135,6 +135,7 @@ parameters,gradParameters = net:getParameters()
 
 -- training function
 function train(dataset)
+   net:training()
    -- epoch tracker
    epoch = epoch or 1
 
@@ -152,8 +153,8 @@ function train(dataset)
       xlua.progress((batch - 1) * opt.batchSize, dataset:size())
 
       -- create mini batch
-      local inputs = torch.Tensor(opt.batchSize, l1):cuda()
-      local targets = torch.Tensor(opt.batchSize):cuda()
+      local inputs = torch.zeros(opt.batchSize, l1):cuda()
+      local targets = torch.zeros(opt.batchSize):cuda()
       local batchCount = 0
       for i = (batch - 1) * opt.batchSize + 1, batch * opt.batchSize do
          batchCount = batchCount + 1
@@ -240,6 +241,7 @@ end
 
 -- test function
 function test(dataset, writeflag)
+   net:evaluate()
    writeflag = writeflag or false
    -- local vars
    local testError = 0
