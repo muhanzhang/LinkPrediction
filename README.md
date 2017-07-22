@@ -4,7 +4,7 @@ Weisfeiler-Lehman Neural Machine for Link Prediction
 Usage
 ----
 The first deep learning approach for link prediction (not by embedding), which extracts links' enclosing subgraphs as input to neural networks to learn their formation mechanisms. For more information, see the following paper:
-> M. Zhang and Y. Chen, Weisfeiler-Lehman Neural Machine for Link Prediction, Proc. ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD-17). [Video](https://www.youtube.com/watch?v=dRC4T2gABS8&t=43s) [Preprint](http://www.cse.wustl.edu/~muhan/papers/KDD_2017.pdf)
+> M. Zhang and Y. Chen, Weisfeiler-Lehman Neural Machine for Link Prediction, Proc. ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD-17). [\[Video\]](https://www.youtube.com/watch?v=dRC4T2gABS8&t=43s) [\[Preprint\]](http://www.cse.wustl.edu/~muhan/papers/KDD_2017.pdf)
 
 Run Main.m in MATLAB to do the link prediction experiments.
 
