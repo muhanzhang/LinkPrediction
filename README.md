@@ -63,5 +63,21 @@ Then install nauty by:
 
 There are two MATLAB wrappers canon.m, canonical.c in the main folder. If there is no canonical.mex file in the main folder, the program canon.m will automatically compile canonical.c for the first time. 
 
+Reference
+---------
+
+If you find the code useful, please cite our paper:
+
+    @inproceedings{zhang2017weisfeiler,
+      title={Weisfeiler-Lehman Neural Machine for Link Prediction},
+      author={Zhang, Muhan and Chen, Yixin},
+      booktitle={Proceedings of the 23rd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
+      pages={575--583},
+      year={2017},
+      organization={ACM}
+    }
+
+Thanks!
+
 Muhan Zhang, muhan@wustl.edu
-2017.2.15
+2/15/2017
