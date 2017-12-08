@@ -29,8 +29,8 @@ for ith_data = 1:size(dataname, 1)
     PredictorsName = [];
     
     % parallelize the repeated experiments
-    poolobj = parpool(feature('numcores'));
-    parfor ith_experiment = 1:numOfExperiment
+    %poolobj = parpool(feature('numcores')); % to enable it, uncomment this line and change 'for' to 'parfor' in the next line
+    for ith_experiment = 1:numOfExperiment
         ith_experiment
         if mod(ith_experiment, 10) == 0
                 tempcont = strcat(int2str(ith_experiment),'%... ');
@@ -215,7 +215,9 @@ for ith_data = 1:size(dataname, 1)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         aucOfallPredictor(ith_experiment, :) = ithAUCvector; PredictorsName = Predictors;
     end
-    delete(poolobj)
+    if exist('poolobj')
+        delete(poolobj)
+    end
 
     %% write the results for this dataset
     avg_auc = mean(aucOfallPredictor,1)

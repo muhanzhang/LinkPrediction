@@ -8,6 +8,7 @@ require 'cunn'
 require 'cutorch'
 require 'optim'
 require 'svm'
+require 'nnsparse'
 
 
 cmd = torch.CmdLine()

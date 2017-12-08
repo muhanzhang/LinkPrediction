@@ -23,11 +23,11 @@ This will install liblinear. Then, in MATLAB, cd to "software/liblinear-2.1/matl
 
 The "WLNM.m" file contains three models: 1) logistic regression, 2) neural network by Torch, and 3) neural network by MATLAB. Please change _model_ in the file according to your need.
 
-If you want to run the Torch neural network (features GPU acceleration) in your Linux server, please use the following command to start MATLAB. This will replace the MATLAB's libstdc++.so.6 with the system's default one (for successfully loading cunn of Torch inside MATLAB).
+If you want to run the Torch neural network (features GPU acceleration) in your Linux server, and your MATLAB cannot succesfully load cunn, please try the following command to start MATLAB. This will replace the MATLAB's libstdc++.so.6 with the system's default one (for successfully loading cunn of Torch inside MATLAB).
 
     LD_PRELOAD="/usr/lib64/libstdc++.so.6" matlab 
 
-Then, in MATLAB, type
+In MATLAB, type
 
     Main
 
@@ -38,13 +38,17 @@ You may also modify "WLNM.m" in order to only store the training and testing dat
 Requirements
 ------------
 
+Torch library _nnsparse_ is required to load data in libsvm format. Install it by:
+    
+    luarocks install --local nnsparse
+
 MATLAB Toolbox Bioinformatics is required to calculate graph shortest distance in "graph2vector.m".
 
 To calculate AUC score inside lua, you need to download the metrics package (optional)
 
     git clone https://github.com/hpenedones/metrics.git
     cd metrics
-    loarocks --local make
+    luarocks --local make
 
 We use nauty, a graph canonization software to break ties in palette-wl labelings. 
 This toolbox also contains a useful MATLAB interface for nauty.
