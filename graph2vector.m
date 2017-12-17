@@ -92,7 +92,7 @@ lweight_subgraph  = A_copy(nodes, nodes);
 
 % Calculate the graph labeling of the subgraph
 order = g_label(subgraph);
-if length(order) > K  % if size > K, delete the last size-K vertices and reorder
+if length(order) > K  % if size > K, keep only the top-K vertices and reorder
     order(K + 1: end) = [];
     subgraph = subgraph(order, order);
     lweight_subgraph = lweight_subgraph(order, order);
