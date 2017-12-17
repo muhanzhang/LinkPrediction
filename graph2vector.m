@@ -78,12 +78,6 @@ while 1
         subgraph = A(nodes, nodes);  % the unweighted subgraph
         subgraph(1, 2) = 0;  % ensure subgraph patterns do not contain information about link existence
         subgraph(2, 1) = 0;
-        % delete extra links, prepare link-weighted subgraph
-        Lia1 = ismember(links(:, 1), nodes);
-        Lia2 = ismember(links(:, 2), nodes);
-        Lia = logical(Lia1 .* Lia2);
-        links = links(Lia, :);
-        links_dist = links_dist(Lia, :);
         break
     end
 end
