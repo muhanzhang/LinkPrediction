@@ -38,9 +38,10 @@ You may also modify "WLNM.m" in order to only store the training and testing dat
 Requirements
 ------------
 
-Torch library _nnsparse_ is required to load data in libsvm format. Install it by:
+Torch libraries _nnsparse_ and  _svm_ are required to load data in libsvm format. Install it by:
     
     luarocks install --local nnsparse
+    luarocks install --local svm
 
 MATLAB Toolbox Bioinformatics is required to calculate graph shortest distance in "graph2vector.m".
 
