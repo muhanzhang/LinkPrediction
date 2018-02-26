@@ -2,8 +2,9 @@ Weisfeiler-Lehman Neural Machine for Link Prediction
 ====================================================
 
 Usage
-----
-The first deep learning approach for link prediction (not by embedding), which extracts links' enclosing subgraphs as input to neural networks to learn their formation mechanisms. For more information, see the following paper:
+-----
+
+Wesfeiler-Lehman Neural Machine (WLNM) is a subgraph-based link prediction method leveraging deep learning to automatically learn graph structure features for link prediction from links' enclosing subgraphs. For more information, see the following paper:
 > M. Zhang and Y. Chen, Weisfeiler-Lehman Neural Machine for Link Prediction, Proc. ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD-17). [\[Video\]](https://www.youtube.com/watch?v=dRC4T2gABS8&t=43s) [\[PDF\]](http://www.cse.wustl.edu/~muhan/papers/KDD_2017.pdf)
 
 Run Main.m in MATLAB to do the link prediction experiments.
@@ -23,9 +24,17 @@ This will install liblinear. Then, in MATLAB, cd to "software/liblinear-2.1/matl
 
 The "WLNM.m" file contains three models: 1) logistic regression, 2) neural network by Torch, and 3) neural network by MATLAB. Please change _model_ in the file according to your need.
 
-If you want to run the Torch neural network (features GPU acceleration) in your Linux server, and your MATLAB cannot succesfully load cunn, please try the following command to start MATLAB. This will replace the MATLAB's libstdc++.so.6 with the system's default one (for successfully loading cunn of Torch inside MATLAB).
+If you want to run the Torch neural network (has the best performance, and features GPU acceleration), you can follow the steps below to install cuda and Torch (for those who do not have deep learning environment in your machine):
 
-    LD_PRELOAD="/usr/lib64/libstdc++.so.6" matlab 
+Install cuda following: http://developer.nvidia.com/cuda-downloads
+
+Install Torch following this link: http://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html#post-installation-actions
+
+Then, install necessary Torch libraries: cutorch, cunn, in order by:
+
+    luarocks install --local libraryName
+
+Now, you should be able to use the Torch neural network model in "nDNN.lua".
 
 In MATLAB, type
 
@@ -33,12 +42,26 @@ In MATLAB, type
 
 to run the experiments. By default, you will run WLNM on the smallest network, USAir, for 1 time. Modify: _numberOfExperiment_, _dataname_, and _method_ in "Main.m", in order to run repeated experiments on all datasets, and compare all link prediction methods.
 
+If your MATLAB cannot succesfully load cunn, please try the following command to start MATLAB. This will replace the MATLAB's libstdc++.so.6 with the system's default one (for successfully loading cunn of Torch inside MATLAB).
+
+    LD_PRELOAD="/usr/lib64/libstdc++.so.6" matlab 
+
+If your MATLAB prints "cannot load ....../....../libcutorch.so", (that is because MATLAB replaces system's environment variables with its own ones when executing command 'system'.) please check your system's LD_LIBRARY_PATH by typing the following command in your shell:
+
+    echo $LD_LIBRARY_PATH
+
+Then, in MATLAB, before running Main, type
+
+    setenv LD_LIBRARY_PATH what_you_got_from_the_echo_command
+
+in order to recall system's LD_LIBRARY_PATH. After that, you should be able to run Torch scripts within MATLAB successfully.
+
 You may also modify "WLNM.m" in order to only store the training and testing data without running Torch, and use your own neural network programs to train and test on them.
 
 Requirements
 ------------
 
-Torch libraries _nnsparse_ and  _svm_ are required to load data in libsvm format. Install it by:
+Torch libraries _nnsparse_ and  _svm_ are required to load data in libsvm format. Install them by:
     
     luarocks install --local nnsparse
     luarocks install --local svm
@@ -83,6 +106,8 @@ If you find the code useful, please cite our paper:
     }
 
 Thanks!
+
+For any questions regarding the paper, the code, the installation and so on, please raise issues or email me. I am happy to help you.
 
 Muhan Zhang, muhan@wustl.edu
 2/15/2017
