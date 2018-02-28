@@ -69,7 +69,21 @@ function [auc] = WLNM(train, test, K, ith_experiment)
             'ExecutionEnvironment', 'cpu');
         net = trainNetwork(reshape(train_data', K*(K-1)/2, 1, 1, size(train_data, 1)), categorical(train_label), layers, opts);
         [~, scores] = classify(net, reshape(test_data', K*(K-1)/2, 1, 1, size(test_data, 1)));
-        scores(:, 1) = [];
+     case 4 % train a neural network with sklearn
+        addpath('software/liblinear-2.1/matlab');  % need to install liblinear
+        train_data = sparse(train_data);
+        test_data = sparse(test_data);
+        if exist('tempdata') ~= 7
+            !mkdir tempdata
+        end
+        libsvmwrite(sprintf('tempdata/traindata_%d', ith_experiment), train_label, train_data);
+        libsvmwrite(sprintf('tempdata/testdata_%d', ith_experiment), test_label, test_data);  % prepare data
+        cmd = sprintf('python3 nDNN.py %d %d', K * (K - 1) / 2, ith_experiment);
+        system(cmd, '-echo'); 
+        scores = load(sprintf('tempdata/test_log_scores_%d.asc', ith_experiment));
+        delete(sprintf('tempdata/traindata_%d', ith_experiment));  % to delete temporal train and test data
+        delete(sprintf('tempdata/testdata_%d', ith_experiment));
+        delete(sprintf('tempdata/test_log_scores_%d.asc', ith_experiment));
     end
 
     % calculate the AUC
