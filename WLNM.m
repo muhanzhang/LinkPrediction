@@ -69,6 +69,7 @@ function [auc] = WLNM(train, test, K, ith_experiment)
             'ExecutionEnvironment', 'cpu');
         net = trainNetwork(reshape(train_data', K*(K-1)/2, 1, 1, size(train_data, 1)), categorical(train_label), layers, opts);
         [~, scores] = classify(net, reshape(test_data', K*(K-1)/2, 1, 1, size(test_data, 1)));
+        scores(:, 1) = [];
      case 4 % train a neural network with sklearn
         addpath('software/liblinear-2.1/matlab');  % need to install liblinear
         train_data = sparse(train_data);
